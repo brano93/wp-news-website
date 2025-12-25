@@ -1,0 +1,316 @@
+/*!
+Theme Name: National Newscast
+Theme URI: https://adorethemes.com/downloads/national-newscast/
+Author: Adore Themes
+Author URI: https://adorethemes.com/
+Description: National Newscast is a sleek, modern WordPress theme ideal for news websites, blogs, magazines, and more. With a professional design, pre-built demos, and full customization options via widgets and the live customizer, it's easy to set up. The theme is fully responsive, SEO-optimized, and built for fast loading across devices. Perfect for any creative website, it offers a clean, user-friendly experience with secure, fast-loading code. You can preview the theme demo here: https://demo.adorethemes.com/national-newscast/
+Version: 1.0.0
+Requires at least: 5.0
+Requires PHP: 7.4
+Tested up to: 6.8
+License: GNU General Public License v3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Template: national-news
+Text Domain: national-newscast
+Tags: custom-background, custom-header, custom-logo, custom-menu, featured-images, footer-widgets, left-sidebar, right-sidebar, blog, one-column, portfolio, photography, theme-options, threaded-comments, translation-ready
+
+This theme, like WordPress, is licensed under the GPL.
+Use it to make something cool, have fun, and share what you've learned.
+
+National Newscast is based on Underscores https://underscores.me/, (C) 2012-2020 Automattic, Inc.
+Underscores is distributed under the terms of the GNU GPL v2 or later.
+
+Normalizing styles have been helped along thanks to the fine work of
+Nicolas Gallagher and Jonathan Neal https://necolas.github.io/normalize.css/
+
+*/
+
+/* Site title font size 
+--------------------------------------------- */
+.site-branding {
+    .site-identity {
+        .site-title {
+            font-size: var(--font-size-xl);
+        }
+    }
+}
+
+/* Banner Section
+--------------------------------------------- */
+.main-banner-section.style-2{
+
+	.main-banner-section-wrapper{
+		display: flex;
+		flex-wrap: wrap;
+		align-items: flex-start;
+		margin-inline: -10px;
+
+		>*{
+			padding-inline: 10px;
+			margin-bottom: 30px;
+			
+			@media (min-width: 992px){
+				position: sticky;
+				top: 40px;
+			}
+		}
+
+		.editor-pick-outer{
+			width: 25%;
+
+			@media (max-width: 1024px){
+				width: 30%;
+			}
+
+			@media (max-width: 768px){
+				width: 100%;
+			}
+
+			.editor-pick-wrapper{
+				display: grid;
+				gap: 20px;
+				grid-template-columns: repeat(1, 1fr);
+
+				.post-item.overlay-post{
+					min-height: 215px;
+				}
+			}
+		}
+
+		.main-featured-grid{
+			width: 75%;
+			
+			@media (max-width: 1024px){
+				width: 70%;
+			}
+
+			@media (max-width: 768px){
+				width: 100%;
+			}
+
+			.main-featured{
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-start;
+				margin-inline: -10px;
+
+				@media (max-width: 1024px){
+					flex-direction: column;
+				}
+	
+				>*{
+					padding-inline: 10px;
+					margin-bottom: 20px;
+					
+					@media (min-width: 1025px){
+						position: sticky;
+						top: 40px;
+					}
+				}
+				
+				.main-news-outer{
+					width: 70%;
+		
+					@media (max-width: 1024px){
+						width: 100%;
+					}
+					.main-news-wrap{
+						border-radius: 5px;
+						overflow: hidden;
+		
+						.post-item.overlay-post{
+							min-height: 450px;
+		
+							.entry-title {
+								font-size: var(--font-size-lg);
+							}
+						} 
+					} 
+				}
+		
+				.featured-posts-outer{
+					width: 30%;
+		
+					@media (max-width: 1024px){
+						width: 100%;
+					}
+
+					.featured-posts{
+						@media (max-width: 1024px){
+							display: grid;
+							gap: 20px;
+							grid-template-columns: repeat(2, 1fr);
+						}
+					}
+		
+					.post-item{
+						&:not(:last-child){
+							margin-bottom: 20px;
+						}
+						
+						&.post-list:not(:has(img)) {
+							align-items: center;
+							padding: 15px;
+							border: 1px solid var(--color-tab-border);
+							.post-item-content{
+								padding: 0;
+							}
+						}
+						&.post-list:has(img) .post-item-image {
+							flex: 0 0 27%;
+							max-width: 27%;
+							aspect-ratio: 1;
+						}
+						&.post-list .post-item-content{
+							padding: 0;
+							padding-inline-start: 15px;
+						}
+						&.post-list .post-item-content .entry-title {
+							margin-block: 5px;
+							overflow: hidden;
+							display: -webkit-box;
+							-webkit-line-clamp: 2;
+							-webkit-box-orient: vertical;
+							font-size: var(--font-size-sm);
+						}
+						&.post-list .post-item-content .entry-meta {
+							margin: 0;
+						}
+					}
+				}
+			}
+
+			.banner-grid-outer{
+				.banner-grid-wrapper {
+					display: grid;
+					gap: 20px;
+					grid-template-columns: repeat(3, 1fr);
+			
+					@media (max-width: 1023px) {
+						grid-template-columns: repeat(2, 1fr);
+					}
+			
+					@media (max-width: 767px) {
+						display: flex;
+						flex-direction: column;
+					}
+
+					.post-item.overlay-post{
+						min-height: 223px;
+
+						&:first-child{
+							grid-row: span 2;
+						}
+					}
+				}
+			}
+			
+		}
+		
+	}
+}
+/* End Banner Section
+--------------------------------------------- */
+
+/* Start Recent Post Section Section
+--------------------------------------------- */
+.recentpost-wrapper {
+	display: grid;
+	gap: 30px;
+	grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+	.recentpost-wrapper {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	.post-item.overlay-post {
+		min-height: 380px;
+	}
+}
+
+@media (max-width: 480px) {
+	.recentpost-wrapper {
+		grid-template-columns: repeat(1, 1fr);
+	}
+}
+/* End Recent Post Section Section
+--------------------------------------------- */
+
+/* bottom header=============== */
+
+@media (min-width: 1024px) {
+	body.admin-bar .adore-header.fix-header {
+		top: 32px;
+	}
+}
+
+@media (min-width: 601px) and (max-width: 768px) {
+	body.admin-bar .adore-header.fix-header {
+		top: 46px;
+	}
+}
+
+@media (max-width: 600px) {
+	.adore-header.fix-header .site-branding {
+		display: none;
+	}
+}
+
+.adore-header:not(.fix-header) {
+	height: 100%;
+	background-color: rgba(0,0,0,0.2);
+}
+.site-header.adore-header-image .adore-header {
+	background-color: rgba(0,0,0,0.3);
+}
+.adore-header.fix-header {
+	position: fixed;
+	width: 100%;
+	top: 0;
+	z-index: 15;
+	background-color: var(--primary-color);
+}
+
+.adore-boxed-wrapper .adore-header.fix-header {
+	max-width: 1500px;
+}
+
+/* End archive layouts
+--------------------------------------------- */
+.theme-archive-layout.list-layout {
+	display: grid;
+	gap: 30px;
+	margin-bottom: 50px;
+}
+
+.theme-archive-layout.list-layout article {
+	margin-bottom: 0;
+}
+.theme-archive-layout.list-layout article:not(.has-post-thumbnail) .post-item-image{
+	display: none;
+}
+
+.theme-archive-layout.list-layout article .post-item.post-list {
+	border: none;
+}
+@media (max-width: 600px) {
+	.theme-archive-layout.list-layout article .post-item.post-list {
+		flex-direction: column;
+	}
+	.theme-archive-layout.list-layout article .post-item.post-list .post-item-image{
+		flex: unset;
+	}
+	.theme-archive-layout.list-layout article .post-item.post-list .post-item-image a img{
+		aspect-ratio: 1/0.7;
+	}
+	.theme-archive-layout.list-layout article .post-item.post-list .post-item-content{
+		padding: 20px;
+	}
+	.theme-archive-layout.list-layout article .post-item.post-list .post-item-content p{
+		margin-bottom: 0;
+	}
+}
+/* End archive layouts
+--------------------------------------------- */

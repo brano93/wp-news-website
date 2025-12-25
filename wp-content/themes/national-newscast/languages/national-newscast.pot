@@ -1,0 +1,114 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-10-10 06:16+0545\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: header.php:26
+msgid "Skip to content"
+msgstr ""
+
+#: header.php:109
+msgid "Header Advertisement Image"
+msgstr ""
+
+#: header.php:159
+msgid "View Random Post"
+msgstr ""
+
+#: search.php:21
+#, php-format
+msgid "Search Results for: %s"
+msgstr ""
+
+#: inc/demo-import.php:6
+msgid "Demo content files for National Newscast Theme."
+msgstr ""
+
+#: inc/demo-import.php:8
+msgid "Click here for Demo File download"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:13
+msgid "Recent Posts Section"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:32
+msgid "Enable Recent Posts Section"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:44
+#: inc/frontpage-sections/recent-posts.php:47
+msgid "Recent Articles"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:52
+msgid "Title"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:76
+#: inc/frontpage-sections/recent-posts.php:48
+msgid "View All"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:84
+msgid "View All Button Label"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:118
+msgid "View All Button Link"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:138
+msgid "Content type:"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:139
+msgid "Choose where you want to render the content from."
+msgstr ""
+
+#: inc/customizer/recent-posts.php:144
+msgid "Post"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:145
+msgid "Recent"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:162
+#, php-format
+msgid "Post %d"
+msgstr ""
+
+#: inc/customizer/recent-posts.php:183
+msgid "Category"
+msgstr ""
+
+#: inc/frontpage-sections/banner-sections/banner-main-news.php:1
+msgid "Main News"
+msgstr ""
+
+#: inc/frontpage-sections/banner-sections/editor-pick.php:1
+msgid "Editor Pick"
+msgstr ""
+
+#: inc/upgrade-to-pro/class-customize.php:76
+msgid "National Newscast Pro"
+msgstr ""
+
+#: inc/upgrade-to-pro/class-customize.php:77
+msgid "Go Pro"
+msgstr ""
