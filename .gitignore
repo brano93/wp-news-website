@@ -21,8 +21,8 @@ QUICK-DEPLOY.md
 backup-*.sql
 deployment-*.tar.gz
 
-# WordPress Uploads (optional - uncomment if you want to exclude)
-# wp-content/uploads/
+# WordPress Uploads (excluded - too large for git, use rsync for deployment)
+wp-content/uploads/
 
 # WordPress Cache
 wp-content/cache/
