@@ -6,6 +6,9 @@
 .env.local
 .env.*.local
 *.env
+wp-config-local.php
+wp-config-production.php
+wp-config-staging.php
 
 # Deployment Scripts & Docs
 deploy-to-do.sh
@@ -19,20 +22,54 @@ QUICK-DEPLOY.md
 *.sqlite
 *.sqlite3
 backup-*.sql
+*.db
 deployment-*.tar.gz
 
 # WordPress Uploads (excluded - too large for git, use rsync for deployment)
 wp-content/uploads/
+wp-content/blogs.dir/
+wp-content/upgrade/
 
 # WordPress Cache
 wp-content/cache/
 wp-content/advanced-cache.php
 wp-content/wp-cache-config.php
+wp-content/wp-cache.php
+wp-content/object-cache.php
 
-# WordPress Debug
+# WordPress Languages & Translations
+wp-content/languages/
+*.pot
+*.po
+*.mo
+
+# WordPress Backups
+wp-content/backup-db/
+wp-content/backups/
+*.backup
+*.bak
+backup-*
+*-backup-*
+
+# WordPress Debug & Logs
 wp-content/debug.log
 wp-content/debug.log.*
+wp-content/error_log
+wp-content/php_error.log
+*.log
+logs/
+error_log
+php_error_log
 local-xdebuginfo.php
+
+# WordPress Upgrade & Maintenance
+wp-content/upgrade/
+wp-content/maintenance.php
+.maintenance
+
+# WordPress Multisite
+wp-content/blogs.dir/
+wp-content/sites/
 
 # OS Files
 .DS_Store
@@ -46,63 +83,95 @@ desktop.ini
 *.swp
 *.swo
 *~
+*.orig
+*.save
 
 # IDE Files
 .idea/
 .vscode/
 *.sublime-project
 *.sublime-workspace
+*.sublime-workspace
 .phpunit.result.cache
+.project
+.classpath
+.settings/
+*.iml
 
-# Node Modules (if any)
+# Node Modules
 node_modules/
 npm-debug.log
 yarn-error.log
+package-lock.json
+yarn.lock
+.pnpm-debug.log
 
 # Composer
 vendor/
 composer.lock
+composer.phar
 
 # Docker
 .docker/
 docker-compose.override.yml
-
-# Logs
-*.log
-logs/
-*.log.*
+*.dockerignore
 
 # Temporary files
 tmp/
 temp/
 *.tmp
-
-# Backup files
-*.bak
-*.backup
-*.old
+*.temp
+*.cache
 
 # WordPress specific
 wp-config-sample.php
-wp-content/upgrade/
-wp-content/backup-db/
-wp-content/advanced-cache.php
-wp-content/wp-cache-config.php
-wp-content/cache/
-wp-content/blogs.dir/
-wp-content/upgrade/
-wp-content/backups/
+wp-settings.php.bak
+
+# WordPress Plugin & Theme Development
+.sass-cache/
+*.css.map
+*.js.map
+.grunt/
+gulpfile.js
+package.json
+webpack.config.js
+
+# WordPress Security
+wp-admin/install.php
+wp-admin/upgrade.php
+
+# WordPress Core (if you want to exclude core, uncomment)
+# /wp-admin/
+# /wp-includes/
+# /wp-*.php
+# /index.php
+# /license.txt
+# /readme.html
+
+# WordPress Plugins (if you want to exclude all plugins, uncomment)
+# /wp-content/plugins/
+# Then add exceptions for custom plugins:
+# !wp-content/plugins/your-custom-plugin/
+
+# WordPress Themes (if you want to exclude default themes)
 wp-content/themes/twenty*/
-
-# Plugins (keep your custom plugin, exclude others if needed)
-# wp-content/plugins/akismet/
-# wp-content/plugins/hello.php
-
-# Themes (exclude default themes)
-# wp-content/themes/twenty*/
+# Keep your custom theme by adding:
+# !wp-content/themes/your-custom-theme/
 
 # Local development
 .local/
 local-config.php
-wp-config-local.php
 
+# WordPress CLI
+wp-cli.yml
+wp-cli.local.yml
+
+# WordPress Export
+*.xml
+*.wxr
+
+# WordPress Import
+import/
+
+# WordPress Custom
+wp-content/mu-plugins/
