@@ -121,6 +121,19 @@ if (!defined('RSI_API_BEARER_TOKEN')) {
     define('RSI_API_BEARER_TOKEN', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4iLCJpYXQiOjE3NjYyNTMzOTQsImV4cCI6MTc2NjMzOTc5NH0.d3eVhFX3lzlNxvYmcveVPmoMKVUNHt6ZKYFkzzvUay4');
   }
 }
+// Set image proxy configuration from environment variables (optional - plugin has defaults)
+if (!defined('RSI_IMAGE_PROXY_HOST')) {
+  $proxy_host = getenv('RSI_IMAGE_PROXY_HOST');
+  if ($proxy_host) {
+    define('RSI_IMAGE_PROXY_HOST', $proxy_host);
+  }
+}
+if (!defined('RSI_IMAGE_PROXY_PORT')) {
+  $proxy_port = getenv('RSI_IMAGE_PROXY_PORT');
+  if ($proxy_port) {
+    define('RSI_IMAGE_PROXY_PORT', $proxy_port);
+  }
+}
 
 /* That's all, stop editing! Happy publishing. */
 

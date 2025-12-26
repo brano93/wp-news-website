@@ -208,6 +208,84 @@ function rsi_sideload_base64_image($base64_data, $post_id) {
 }
 
 /**
+ * Download image via proxy using cURL
+ *
+ * @param string $url Image URL to download
+ * @param string $proxy_url Proxy URL (host:port)
+ * @param bool $ssl_verify Whether to verify SSL
+ * @return string|WP_Error Temporary file path or WP_Error on failure
+ */
+function rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify = true) {
+  // Check if cURL is available
+  if (!function_exists('curl_init')) {
+    return new WP_Error('curl_not_available', 'cURL extension is not available');
+  }
+  
+  // Create temporary file
+  $temp_file = wp_tempnam(basename(parse_url($url, PHP_URL_PATH)));
+  if (!$temp_file) {
+    return new WP_Error('temp_file', 'Could not create temporary file');
+  }
+  
+  // Open file handle for writing
+  $file_handle = @fopen($temp_file, 'wb');
+  if (!$file_handle) {
+    @unlink($temp_file);
+    return new WP_Error('file_open', 'Could not open temporary file for writing');
+  }
+  
+  // Initialize cURL
+  $ch = curl_init();
+  if (!$ch) {
+    @fclose($file_handle);
+    @unlink($temp_file);
+    return new WP_Error('curl_init', 'Could not initialize cURL');
+  }
+  
+  // Set cURL options
+  curl_setopt_array($ch, array(
+    CURLOPT_URL => $url,
+    CURLOPT_FILE => $file_handle,
+    CURLOPT_FOLLOWLOCATION => true,
+    CURLOPT_MAXREDIRS => 5,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_CONNECTTIMEOUT => 10,
+    CURLOPT_PROXY => $proxy_url,
+    CURLOPT_PROXYTYPE => CURLPROXY_HTTP,
+    CURLOPT_SSL_VERIFYPEER => $ssl_verify,
+    CURLOPT_SSL_VERIFYHOST => $ssl_verify ? 2 : 0,
+    CURLOPT_USERAGENT => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url'),
+  ));
+  
+  // Execute request
+  $result = curl_exec($ch);
+  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $error = curl_error($ch);
+  curl_close($ch);
+  fclose($file_handle);
+  
+  // Check for errors
+  if (!$result || !empty($error)) {
+    @unlink($temp_file);
+    return new WP_Error('curl_error', 'cURL error: ' . $error);
+  }
+  
+  // Check HTTP status code
+  if ($http_code < 200 || $http_code >= 300) {
+    @unlink($temp_file);
+    return new WP_Error('http_error', 'HTTP error: ' . $http_code);
+  }
+  
+  // Verify file was written and has content
+  if (!file_exists($temp_file) || filesize($temp_file) === 0) {
+    @unlink($temp_file);
+    return new WP_Error('empty_file', 'Downloaded file is empty');
+  }
+  
+  return $temp_file;
+}
+
+/**
  * Sideload single image to media library
  *
  * @param string $url External image URL
@@ -219,31 +297,49 @@ function rsi_sideload_image($url, $post_id) {
     // Check if in development environment
     $is_dev = rsi_is_development();
     
-    // In development, disable SSL verification for image downloads
-    if ($is_dev) {
-      add_filter('https_ssl_verify', '__return_false');
-      add_filter('https_local_ssl_verify', '__return_false');
-      add_filter('http_request_args', function($args, $request_url) {
-        $args['sslverify'] = false;
-        $args['timeout'] = 30;
-        return $args;
-      }, 10, 2);
-    }
+    // Check if proxy is configured (constants or environment variables)
+    $proxy_host = defined('RSI_IMAGE_PROXY_HOST') ? RSI_IMAGE_PROXY_HOST : getenv('RSI_IMAGE_PROXY_HOST');
+    $proxy_port = defined('RSI_IMAGE_PROXY_PORT') ? RSI_IMAGE_PROXY_PORT : getenv('RSI_IMAGE_PROXY_PORT');
     
-    // Download file to temp location
-    $timeout_seconds = 30;
-    $temp_file = download_url($url, $timeout_seconds);
-    
-    // Remove filters after download attempt
-    if ($is_dev) {
-      remove_filter('https_ssl_verify', '__return_false');
-      remove_filter('https_local_ssl_verify', '__return_false');
-      remove_all_filters('http_request_args');
-    }
-    
-    if (is_wp_error($temp_file)) {
-      error_log('[RSS Smart Importer] Failed to download image: ' . $url . ' - ' . $temp_file->get_error_message());
-      return false;
+    // Use proxy if configured, otherwise use standard WordPress download_url
+    if ($proxy_host && $proxy_port) {
+      // Download file via proxy
+      $proxy_url = $proxy_host . ':' . $proxy_port;
+      $ssl_verify = !$is_dev; // Disable SSL verification in development
+      $temp_file = rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify);
+      
+      if (is_wp_error($temp_file)) {
+        error_log('[RSS Smart Importer] Failed to download image via proxy: ' . $url . ' - ' . $temp_file->get_error_message());
+        return false;
+      }
+    } else {
+      // Use standard WordPress download method (no proxy)
+      // In development, disable SSL verification for image downloads
+      if ($is_dev) {
+        add_filter('https_ssl_verify', '__return_false');
+        add_filter('https_local_ssl_verify', '__return_false');
+        add_filter('http_request_args', function($args, $request_url) {
+          $args['sslverify'] = false;
+          $args['timeout'] = 30;
+          return $args;
+        }, 10, 2);
+      }
+      
+      // Download file to temp location
+      $timeout_seconds = 30;
+      $temp_file = download_url($url, $timeout_seconds);
+      
+      // Remove filters after download attempt
+      if ($is_dev) {
+        remove_filter('https_ssl_verify', '__return_false');
+        remove_filter('https_local_ssl_verify', '__return_false');
+        remove_all_filters('http_request_args');
+      }
+      
+      if (is_wp_error($temp_file)) {
+        error_log('[RSS Smart Importer] Failed to download image: ' . $url . ' - ' . $temp_file->get_error_message());
+        return false;
+      }
     }
     
     // Get file name from URL

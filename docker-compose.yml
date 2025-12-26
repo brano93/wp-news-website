@@ -35,6 +35,8 @@ services:
       WORDPRESS_DEBUG: ${WP_DEBUG:-0}
       RSI_API_HOST: ${RSI_API_HOST:-}
       RSI_API_BEARER_TOKEN: ${RSI_API_BEARER_TOKEN:-}
+      RSI_IMAGE_PROXY_HOST: ${RSI_IMAGE_PROXY_HOST:-}
+      RSI_IMAGE_PROXY_PORT: ${RSI_IMAGE_PROXY_PORT:-}
     volumes:
       - .:/var/www/html
     healthcheck:

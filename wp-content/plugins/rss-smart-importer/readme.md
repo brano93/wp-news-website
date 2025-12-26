@@ -127,6 +127,34 @@ define('RSI_API_BEARER_TOKEN', 'your-bearer-token-here');
 - If a token is set via constant/environment variable, the admin UI input field will be disabled
 - The plugin UI will show a notice indicating the token source (constant, environment variable, or settings)
 
+#### RSI_IMAGE_PROXY_HOST and RSI_IMAGE_PROXY_PORT
+
+Configures a proxy server for image downloads. All image download requests will be routed through the specified proxy.
+
+**Priority order:**
+1. Constants `RSI_IMAGE_PROXY_HOST` and `RSI_IMAGE_PROXY_PORT` (in `wp-config.php`)
+2. Environment variables `RSI_IMAGE_PROXY_HOST` and `RSI_IMAGE_PROXY_PORT`
+3. If not configured, proxy is not used (standard WordPress download method)
+
+**Note:** Both `RSI_IMAGE_PROXY_HOST` and `RSI_IMAGE_PROXY_PORT` must be set for the proxy to be used.
+
+**Example in wp-config.php:**
+```php
+define('RSI_IMAGE_PROXY_HOST', '127.0.0.1');
+define('RSI_IMAGE_PROXY_PORT', '20003');
+```
+
+**Example in .env file (Docker):**
+```
+RSI_IMAGE_PROXY_HOST=127.0.0.1
+RSI_IMAGE_PROXY_PORT=20003
+```
+
+**Note:** 
+- Image downloads use cURL with HTTP proxy support
+- Only image downloads (jpg, png, gif, webp, etc.) will use the proxy
+- The proxy must be accessible from the WordPress server
+
 ### Acceptance Criteria
 
 - Plugin activates without errors on a fresh site.
