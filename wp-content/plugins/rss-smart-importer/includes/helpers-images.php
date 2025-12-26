@@ -321,11 +321,11 @@ function rsi_sideload_image($url, $post_id) {
     
     // Debug logging
     error_log('[RSS Smart Importer] Image download attempt for: ' . $url);
-    error_log('[RSS Smart Importer] Proxy host: ' . ($proxy_host ? $proxy_host : 'NOT SET'));
-    error_log('[RSS Smart Importer] Proxy port: ' . ($proxy_port ? $proxy_port : 'NOT SET'));
+    error_log('[RSS Smart Importer] Proxy host: ' . $proxy_host);
+    error_log('[RSS Smart Importer] Proxy port: ' . $proxy_port);
     
-    // Use proxy if configured, otherwise use standard WordPress download_url
-    if ($proxy_host && $proxy_port) {
+    // Use proxy (always enabled by default, set RSI_IMAGE_PROXY_HOST to empty to disable)
+    if ($proxy_host && $proxy_port && $proxy_host !== 'disabled') {
       // Download file via proxy
       $proxy_url = $proxy_host . ':' . $proxy_port;
       error_log('[RSS Smart Importer] Using proxy: ' . $proxy_url);
