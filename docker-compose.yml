@@ -49,3 +49,7 @@ services:
 
 volumes:
   wp_db:
+
+networks:
+  wp-network:
+    driver: bridge
