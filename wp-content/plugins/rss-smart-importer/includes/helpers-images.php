@@ -218,12 +218,16 @@ function rsi_sideload_base64_image($base64_data, $post_id) {
 function rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify = true) {
   // Check if cURL is available
   if (!function_exists('curl_init')) {
+    error_log('[RSS Smart Importer] cURL extension is not available');
     return new WP_Error('curl_not_available', 'cURL extension is not available');
   }
+  
+  error_log('[RSS Smart Importer] Starting proxy download - URL: ' . $url . ', Proxy: ' . $proxy_url);
   
   // Create temporary file
   $temp_file = wp_tempnam(basename(parse_url($url, PHP_URL_PATH)));
   if (!$temp_file) {
+    error_log('[RSS Smart Importer] Failed to create temporary file');
     return new WP_Error('temp_file', 'Could not create temporary file');
   }
   
@@ -231,6 +235,7 @@ function rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify = true) {
   $file_handle = @fopen($temp_file, 'wb');
   if (!$file_handle) {
     @unlink($temp_file);
+    error_log('[RSS Smart Importer] Failed to open temporary file for writing');
     return new WP_Error('file_open', 'Could not open temporary file for writing');
   }
   
@@ -239,6 +244,7 @@ function rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify = true) {
   if (!$ch) {
     @fclose($file_handle);
     @unlink($temp_file);
+    error_log('[RSS Smart Importer] Failed to initialize cURL');
     return new WP_Error('curl_init', 'Could not initialize cURL');
   }
   
@@ -255,33 +261,45 @@ function rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify = true) {
     CURLOPT_SSL_VERIFYPEER => $ssl_verify,
     CURLOPT_SSL_VERIFYHOST => $ssl_verify ? 2 : 0,
     CURLOPT_USERAGENT => 'WordPress/' . get_bloginfo('version') . '; ' . get_bloginfo('url'),
+    CURLOPT_VERBOSE => true, // Enable verbose output for debugging
   ));
   
   // Execute request
   $result = curl_exec($ch);
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   $error = curl_error($ch);
+  $curl_errno = curl_errno($ch);
   curl_close($ch);
   fclose($file_handle);
+  
+  error_log('[RSS Smart Importer] cURL result: ' . ($result ? 'SUCCESS' : 'FAILED'));
+  error_log('[RSS Smart Importer] HTTP code: ' . $http_code);
+  if (!empty($error)) {
+    error_log('[RSS Smart Importer] cURL error: ' . $error . ' (errno: ' . $curl_errno . ')');
+  }
   
   // Check for errors
   if (!$result || !empty($error)) {
     @unlink($temp_file);
-    return new WP_Error('curl_error', 'cURL error: ' . $error);
+    return new WP_Error('curl_error', 'cURL error: ' . $error . ' (errno: ' . $curl_errno . ')');
   }
   
   // Check HTTP status code
   if ($http_code < 200 || $http_code >= 300) {
     @unlink($temp_file);
+    error_log('[RSS Smart Importer] HTTP error code: ' . $http_code);
     return new WP_Error('http_error', 'HTTP error: ' . $http_code);
   }
   
   // Verify file was written and has content
-  if (!file_exists($temp_file) || filesize($temp_file) === 0) {
+  $file_size = file_exists($temp_file) ? filesize($temp_file) : 0;
+  if (!file_exists($temp_file) || $file_size === 0) {
     @unlink($temp_file);
+    error_log('[RSS Smart Importer] Downloaded file is empty or missing (size: ' . $file_size . ')');
     return new WP_Error('empty_file', 'Downloaded file is empty');
   }
   
+  error_log('[RSS Smart Importer] Successfully downloaded image via proxy (size: ' . $file_size . ' bytes)');
   return $temp_file;
 }
 
@@ -301,10 +319,16 @@ function rsi_sideload_image($url, $post_id) {
     $proxy_host = defined('RSI_IMAGE_PROXY_HOST') ? RSI_IMAGE_PROXY_HOST : getenv('RSI_IMAGE_PROXY_HOST');
     $proxy_port = defined('RSI_IMAGE_PROXY_PORT') ? RSI_IMAGE_PROXY_PORT : getenv('RSI_IMAGE_PROXY_PORT');
     
+    // Debug logging
+    error_log('[RSS Smart Importer] Image download attempt for: ' . $url);
+    error_log('[RSS Smart Importer] Proxy host: ' . ($proxy_host ? $proxy_host : 'NOT SET'));
+    error_log('[RSS Smart Importer] Proxy port: ' . ($proxy_port ? $proxy_port : 'NOT SET'));
+    
     // Use proxy if configured, otherwise use standard WordPress download_url
     if ($proxy_host && $proxy_port) {
       // Download file via proxy
       $proxy_url = $proxy_host . ':' . $proxy_port;
+      error_log('[RSS Smart Importer] Using proxy: ' . $proxy_url);
       $ssl_verify = !$is_dev; // Disable SSL verification in development
       $temp_file = rsi_download_image_via_proxy($url, $proxy_url, $ssl_verify);
       
